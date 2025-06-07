@@ -1,0 +1,8 @@
+{
+  "navigationBarBackgroundColor": "#f7c1c1",
+  "navigationBarTextStyle": "white",
+  "navigationBarTitleText": "汉中茗茶微系统首页",
+  "usingComponents": {
+    "uni-icons": "/components/uni-ui/lib/uni-icons/uni-icons"
+  }
+}

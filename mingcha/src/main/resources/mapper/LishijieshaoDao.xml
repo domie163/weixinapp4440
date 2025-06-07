@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.LishijieshaoDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.lishijieshao_uuid_number as lishijieshaoUuidNumber
+        ,a.lishijieshao_name as lishijieshaoName
+        ,a.lishijieshao_photo as lishijieshaoPhoto
+        ,a.lishijieshao_file as lishijieshaoFile
+        ,a.chaye_types as chayeTypes
+        ,a.lishijieshao_qiyuandi as lishijieshaoQiyuandi
+        ,a.qiyuan_time as qiyuanTime
+        ,a.lishijieshao_content as lishijieshaoContent
+        ,a.insert_time as insertTime
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.LishijieshaoView" >
+        SELECT
+        <include refid="Base_Column_List" />
+        <!-- 级联表的字段 -->
+
+        FROM lishijieshao  a
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test=" params.lishijieshaoUuidNumber != '' and params.lishijieshaoUuidNumber != null and params.lishijieshaoUuidNumber != 'null' ">
+                and a.lishijieshao_uuid_number like CONCAT('%',#{params.lishijieshaoUuidNumber},'%')
+            </if>
+            <if test=" params.lishijieshaoName != '' and params.lishijieshaoName != null and params.lishijieshaoName != 'null' ">
+                and a.lishijieshao_name like CONCAT('%',#{params.lishijieshaoName},'%')
+            </if>
+            <if test="params.chayeTypes != null and params.chayeTypes != ''">
+                and a.chaye_types = #{params.chayeTypes}
+            </if>
+            <if test=" params.lishijieshaoQiyuandi != '' and params.lishijieshaoQiyuandi != null and params.lishijieshaoQiyuandi != 'null' ">
+                and a.lishijieshao_qiyuandi like CONCAT('%',#{params.lishijieshaoQiyuandi},'%')
+            </if>
+            <if test=" params.qiyuanTimeStart != '' and params.qiyuanTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.qiyuan_time) >= UNIX_TIMESTAMP(#{params.qiyuanTimeStart}) ]]>
+            </if>
+            <if test=" params.qiyuanTimeEnd != '' and params.qiyuanTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.qiyuan_time) <= UNIX_TIMESTAMP(#{params.qiyuanTimeEnd}) ]]>
+            </if>
+            <if test="params.qiyuanTime != null and params.qiyuanTime != ''">
+                and a.qiyuan_time = #{params.qiyuanTime}
+            </if>
+            <if test=" params.lishijieshaoContent != '' and params.lishijieshaoContent != null and params.lishijieshaoContent != 'null' ">
+                and a.lishijieshao_content like CONCAT('%',#{params.lishijieshaoContent},'%')
+            </if>
+            <if test=" params.insertTimeStart != '' and params.insertTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) >= UNIX_TIMESTAMP(#{params.insertTimeStart}) ]]>
+            </if>
+            <if test=" params.insertTimeEnd != '' and params.insertTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) <= UNIX_TIMESTAMP(#{params.insertTimeEnd}) ]]>
+            </if>
+            <if test="params.insertTime != null and params.insertTime != ''">
+                and a.insert_time = #{params.insertTime}
+            </if>
+
+        </where>
+        order by a.${params.sort} ${params.order}
+    </select>
+
+</mapper>
